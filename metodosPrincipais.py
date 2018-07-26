@@ -8,6 +8,37 @@ import PIL.Image as pil
 #Amostra 0 do bícpes dos diabéticos tem valores muito extremos no frame 4118
 #Amostra 1 do bíceps dos controle tem valores extremos no frame 8832
 
+#Função que carrega as imagens de um diretório
+def carregarImagensDoDiretorio(diretorio):
+    data = []
+    
+    for fname in os.listdir(diretorio):
+        pathname = os.path.join(diretorio, fname)
+        imagem = pil.open(pathname)
+        matriz = np.asarray(imagem)
+        data.append(matriz)
+        dados = np.asarray(data)
+    return dados
+
+def obterConjuntoTreinamentoValidacao(dir_train, dir_val):
+    treinamento_1 = carregarImagensDoDiretorio(f'{dir_train}/controle/')
+    treinamento_2 = carregarImagensDoDiretorio(f'{dir_train}/diabetico/')
+    validacao_1 = carregarImagensDoDiretorio(f'{dir_val}/controle')
+    validacao_2 = carregarImagensDoDiretorio(f'{dir_val}/diabetico')
+    
+    X_train = np.concatenate((treinamento_1, treinamento_2))
+    X_val = np.concatenate((validacao_1, validacao_2))
+    
+    y_zeros = np.zeros((int(X_train.shape[0]/2), 1))
+    y_ones = np.ones((int(X_train.shape[0]/2), 1))
+    y_train = np.concatenate((y_zeros, y_ones))
+    
+    y_zeros = np.zeros((int(X_val.shape[0]/2), 1))
+    y_ones = np.ones((int(X_val.shape[0]/2), 1))
+    y_val = np.concatenate((y_zeros, y_ones))
+    
+    return X_train, X_val, y_train, y_val
+
 #Obter valor máximo e mínimo de cada trial
 def obterMinMax(dados):
     minimo = 0
