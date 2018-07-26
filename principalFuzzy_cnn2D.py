@@ -1,55 +1,46 @@
 from tensorflow.python.keras import layers
 from tensorflow.python.keras import models
-#from tensorflow.python.keras import regularizers
-#from tensorflow.python.keras import optimizers
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
-#import numpy as np
-#import scipy.io as sp
 import matplotlib.pyplot as plt
 
 model = models.Sequential()
 model.add(layers.Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding='same', input_shape=(5, 12, 1)))
-#model.add(layers.BatchNormalization())
 model.add(layers.MaxPooling2D(pool_size=(2,2), padding='same'))
 model.add(layers.Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding='same'))
-#model.add(layers.BatchNormalization())
 model.add(layers.MaxPooling2D(pool_size=(2,2), padding='same'))
 model.add(layers.Flatten())
-#model.add(layers.Dropout(0.2))
 model.add(layers.Dense(units=512, activation='relu'))
-#model.add(layers.Dropout(0.2))
 model.add(layers.Dense(units=256, activation='relu'))
-#model.add(layers.Dropout(0.2))
 model.add(layers.Dense(units=1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 model.summary()
 
-train_datagen = ImageDataGenerator(rescale=1./255)
-#train_datagen = ImageDataGenerator(rescale=1./255,
-#                                         rotation_range=7,
-#                                         horizontal_flip=True,
-#                                         shear_range=0.2,
-#                                         height_shift_range=0.07,
-#                                         zoom_range=0.2)
+#train_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(rescale=1./255,
+                                         rotation_range=7,
+                                         horizontal_flip=True,
+                                         shear_range=0.2,
+                                         height_shift_range=0.07,
+                                         zoom_range=0.2)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory('./DiretorioBase/train', 
+train_generator = train_datagen.flow_from_directory('./FuzzyBase/train', 
                                                     color_mode='grayscale',
                                                     target_size=(5, 12), 
-                                                    batch_size=100, class_mode='binary')
-validation_generator = test_datagen.flow_from_directory('./DiretorioBase/validation', 
+                                                    batch_size=10, class_mode='binary')
+validation_generator = test_datagen.flow_from_directory('./FuzzyBase/validation', 
                                                         color_mode='grayscale',
                                                         target_size=(5, 12), 
-                                                        batch_size=100, class_mode='binary')
+                                                        batch_size=10, class_mode='binary')
 
 for data_batch, labels_batch in train_generator:
     print('data batch shape:', data_batch.shape)
     print('label batch shape:', labels_batch.shape)
     break
 
-history = model.fit_generator(train_generator, steps_per_epoch=20000/100, epochs=25, 
-                              validation_data=validation_generator, validation_steps=12000/100)
+history = model.fit_generator(train_generator, steps_per_epoch=40, epochs=15, 
+                              validation_data=validation_generator, validation_steps=24)
 
 acc = history.history['acc']
 val_acc = history.history['val_acc']

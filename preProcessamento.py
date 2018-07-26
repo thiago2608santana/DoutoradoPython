@@ -1,6 +1,4 @@
-#import numpy as np
 import scipy.io as sp
-#import matplotlib.pyplot as plt
 #import os
 #import io
 import metodosPrincipais as mp
@@ -37,14 +35,19 @@ qtdTrain, qtdValidation, qtdTest = mp.definirTreinamentoValidacao(qtdPercentTrai
 
 mp.criarDiretorio(diretorio_imagens_controle)
 mp.criarDiretorio(diretorio_imagens_diabetico)
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, vasto_controle_10_1, diretorio_imagens_controle, 'vl')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, vasto_diabeticos_10_1, diretorio_imagens_diabetico, 'vl')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, biceps_controle_10_1, diretorio_imagens_controle, 'bf')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, biceps_diabeticos_10_1, diretorio_imagens_diabetico, 'bf')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, gastrocnemio_controle_10_1, diretorio_imagens_controle, 'gm')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, gastrocnemio_diabeticos_10_1, diretorio_imagens_diabetico, 'gm')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, tibial_controle_10_1, diretorio_imagens_controle, 'ta')
-mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, tibial_diabeticos_10_1, diretorio_imagens_diabetico, 'ta')
+
+minimo, maximo = mp.obterMinMaxPorMusculo(qtdAmostras,vasto_controle_10_1)
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, vasto_controle_10_1, diretorio_imagens_controle, minimo, maximo, 'vl', 'controle')
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, vasto_diabeticos_10_1, diretorio_imagens_diabetico, minimo, maximo, 'vl', 'diabetico')
+minimo, maximo = mp.obterMinMaxPorMusculo(qtdAmostras,biceps_controle_10_1)
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, biceps_controle_10_1, diretorio_imagens_controle, minimo, maximo, 'bf', 'controle')
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, biceps_diabeticos_10_1, diretorio_imagens_diabetico, minimo, maximo, 'bf', 'diabetico')
+minimo, maximo = mp.obterMinMaxPorMusculo(qtdAmostras,gastrocnemio_controle_10_1)
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, gastrocnemio_controle_10_1, diretorio_imagens_controle, minimo, maximo, 'gm', 'controle')
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, gastrocnemio_diabeticos_10_1, diretorio_imagens_diabetico, minimo, maximo, 'gm', 'diabetico')
+minimo, maximo = mp.obterMinMaxPorMusculo(qtdAmostras,tibial_controle_10_1)
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, tibial_controle_10_1, diretorio_imagens_controle, minimo, maximo, 'ta', 'controle')
+mp.salvarImagensEmDisco(qtdAmostras, qtdImagens, tibial_diabeticos_10_1, diretorio_imagens_diabetico, minimo, maximo, 'ta', 'diabetico')
 
 mp.prepararDados(base_dir,f'./{diretorio_imagens_controle}',f'./{diretorio_imagens_diabetico}',
                  qtdTrain,qtdValidation,qtdTest)
