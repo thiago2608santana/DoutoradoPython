@@ -105,3 +105,12 @@ venv.bak/
 
 #matlab
 *.mat
+
+#images
+*.jpg
+*.png
+
+#directories
+ImagensFuzzyControle/
+ImagensFuzzyDiabeticos/
+FuzzyBase/
