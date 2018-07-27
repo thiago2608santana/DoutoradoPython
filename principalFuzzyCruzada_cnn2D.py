@@ -17,7 +17,7 @@ y_train = y_train.astype('float32')
 y_val = y_val.astype('float32')
 
 #kfold = StratifiedKFold(n_splits=5, shuffle=True)
-rkfold = RepeatedStratifiedKFold(n_splits=5, n_repeats=10)
+rkfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=10)
 resultados = []
 
 #a = np.zeros(5)
