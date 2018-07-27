@@ -116,27 +116,27 @@ def salvarImagensEmDisco(qtdAmostras, qtdImagens, dados, diretorio, minimo, maxi
             if nomeDados == 'bf':
                 #plt.imsave(f'./{diretorio}/{i}_imagem_controle_biceps_{j}.jpg',dadoVoluntarioControle)
                 if grupoDados == 'controle':
-                    imagem.save(f'./{diretorio}/{i}_imagem_controle_biceps_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_controle_biceps_{j}.jpg')
                 else:
-                    imagem.save(f'./{diretorio}/{i}_imagem_diabetico_biceps_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_diabetico_biceps_{j}.jpg')
             elif nomeDados == 'gm':
                 #plt.imsave(f'./{diretorio}/{i}_imagem_controle_gastrocnemio_{j}.jpg',dadoVoluntarioControle)
                 if grupoDados == 'controle':
-                    imagem.save(f'./{diretorio}/{i}_imagem_controle_gastrocnemio_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_controle_gastrocnemio_{j}.jpg')
                 else:
-                    imagem.save(f'./{diretorio}/{i}_imagem_diabetico_gastrocnemio_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_diabetico_gastrocnemio_{j}.jpg')
             elif nomeDados == 'ta':
                 #plt.imsave(f'./{diretorio}/{i}_imagem_controle_tibial_{j}.jpg',dadoVoluntarioControle)
                 if grupoDados == 'controle':
-                    imagem.save(f'./{diretorio}/{i}_imagem_controle_tibial_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_controle_tibial_{j}.jpg')
                 else:
-                    imagem.save(f'./{diretorio}/{i}_imagem_diabetico_tibial_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_diabetico_tibial_{j}.jpg')
             else:
                 #plt.imsave(f'./{diretorio}/{i}_imagem_controle_vasto_{j}.jpg',dadoVoluntarioControle)
                 if grupoDados == 'controle':
-                    imagem.save(f'./{diretorio}/{i}_imagem_controle_vasto_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_controle_vasto_{j}.jpg')
                 else:
-                    imagem.save(f'./{diretorio}/{i}_imagem_diabetico_vasto_{j}.jpg')
+                    imagem.save(f'./{diretorio}/{i}_diabetico_vasto_{j}.jpg')
 
 #Função que define a quantidade de amostras nos grupos de treino, validação e teste
 def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation, qtdPercentTest, qtdAmostras, qtdImagens):
@@ -237,24 +237,24 @@ def salvarImagensFuzzy(qtdAmostras, dados, diretorio, nomeDados, grupoDados):
         
         if nomeDados == 'bf':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_biceps.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_biceps.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps.jpg')
         elif nomeDados == 'gm':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_gastrocnemio.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_gastrocnemio.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio.jpg')
         elif nomeDados == 'ta':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_tibial.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_tibial.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_tibial.jpg')
         else:
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_vasto.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_imagem_fuzzy_vasto.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto.jpg')
                 
 def prepararDadosFuzzy(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
     itens_controle_dir = os.listdir(controle_dir)
