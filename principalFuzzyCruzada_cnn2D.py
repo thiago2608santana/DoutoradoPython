@@ -16,14 +16,11 @@ previsores /= 255
 y_train = y_train.astype('float32')
 y_val = y_val.astype('float32')
 
-#kfold = StratifiedKFold(n_splits=5, shuffle=True)
-rkfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=10)
+kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=1)
+#rkfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=5)
 resultados = []
 
-#a = np.zeros(5)
-#b = np.zeros(shape=(y_train.shape[0], 1))
-
-for indice_treinamento, indice_teste in rkfold.split(previsores, y_train):
+for indice_treinamento, indice_teste in kfold.split(previsores, y_train):
     #print('Indices treinamento', indice_treinamento, 'Indice teste', indice_teste)
     classificador = Sequential()
     classificador.add(Conv2D(filters=64, kernel_size=(3, 3), input_shape=(5, 12, 1), activation='relu', padding='same'))
