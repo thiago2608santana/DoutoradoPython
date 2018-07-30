@@ -157,7 +157,8 @@ def salvarImagensEmDisco(qtdAmostras, qtdImagens, dados, diretorio, minimo, maxi
                     imagem.save(f'./{diretorio}/{i}_diabetico_vasto_{j}.jpg')
 
 #Função que define a quantidade de amostras nos grupos de treino, validação e teste
-def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation, qtdPercentTest, qtdAmostras, qtdImagens):
+def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation, 
+                                qtdPercentTest, qtdAmostras, qtdImagens):
     qtdAmostras = 2*qtdAmostras
     train = round((qtdPercentTrain*qtdAmostras)/100)
     validation = round((qtdPercentValidation*qtdAmostras)/100)
@@ -179,8 +180,8 @@ def rgb2gray(rgb):
     
 #Função que prepara os dados, criando diretórios caso não existam e copiando arquivos nos devidos lugares
 def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
-    itens_controle_dir = sorted(os.listdir(controle_dir), key=takeFirstAndLast)
-    itens_diabetico_dir = sorted(os.listdir(diabetico_dir), key=takeFirstAndLast)
+    itens_controle_dir = sorted(os.listdir(controle_dir),key=takeFirstAndLast)
+    itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=takeFirstAndLast)
     
     criarDiretorio(base_dir)
     
@@ -255,28 +256,28 @@ def salvarImagensFuzzy(qtdAmostras, dados, diretorio, nomeDados, grupoDados):
         
         if nomeDados == 'biceps':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps_1.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps_1.jpg')
         elif nomeDados == 'gastrocnemio':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio_1.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio_1.jpg')
         elif nomeDados == 'tibial':
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial_1.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_tibial.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_tibial_1.jpg')
         else:
             if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto.jpg')
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto_1.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto_1.jpg')
                 
 def prepararDadosFuzzy(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
-    itens_controle_dir = os.listdir(controle_dir)
-    itens_diabetico_dir = os.listdir(diabetico_dir)
+    itens_controle_dir = sorted(os.listdir(controle_dir),key=takeFirstAndLast)
+    itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=takeFirstAndLast)
     
     criarDiretorio(base_dir)
     
