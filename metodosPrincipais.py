@@ -1,18 +1,11 @@
 import os, shutil
 import numpy as np
-#import scipy.misc
 import scipy.io as sp
 import PIL.Image as pil
 import re
 
-#Link interessante sobre array como imagem
-#https://stackoverflow.com/questions/902761/saving-a-numpy-array-as-an-image
-#Amostra 0 do bícpes dos diabéticos tem valores muito extremos no frame 4118
-#Amostra 1 do bíceps dos controle tem valores extremos no frame 8832
-
 #Função que carrega os arquivos contidos em um diretório e retorna um
-#dicionário com os dados e um dicionário com o nome do músculo e o grupo
-#ao qual o voluntário pertence
+#dicionário com os dados e um dicionário com os metadados referentes ao arquivo
 def carregarDadosDeDiretorio(caminho):
     dados = {}
     metaDados = []
@@ -20,7 +13,7 @@ def carregarDadosDeDiretorio(caminho):
     arquivos = os.listdir(caminho)
     for i in range(len(arquivos)):
         dados[i] = sp.loadmat(f'{caminho}{arquivos[i]}')
-        musculo_grupo = re.search('fuzzy_(.*?)_(.*?)_(.*?)_(.*?).mat',arquivos[i])
+        musculo_grupo = re.search('(.*?)_(.*?)_(.*?)_(.*?).mat',arquivos[i])
         metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
                       musculo_grupo.group(3),musculo_grupo.group(4)))
     
@@ -57,47 +50,6 @@ def obterConjuntoTreinamentoValidacao(dir_train, dir_val):
     
     return X_train, X_val, y_train, y_val
 
-#Obter valor máximo e mínimo de cada trial
-def obterMinMax(dados):
-    minimo = 0
-    maximo = 0
-    
-    for i in range(len(dados[0][0][:])):
-        frame = obterFrames(dados,i)
-        matriz = np.asarray(frame)
-        matriz[4][0] = 0
-        if np.amax(matriz) > maximo:
-            maximo = np.amax(matriz)
-        if np.amin(matriz) < minimo:
-            minimo = np.amin(matriz)
-            
-    return minimo, maximo
-
-#Obter valor mínimo e máximo de cada músculo, no intuito de normalizar os dados
-#do grupo diabéticos com base nos dados do grupo controle
-def obterMinMaxPorMusculo(qtdAmostras, dados):
-    minimo = 0
-    maximo = 0
-    
-    for i in range(qtdAmostras):
-        for j in range(len(dados['dados_prontos'][i][0][0][0][:])):
-            frame = obterFrames(dados['dados_prontos'][i][0],j)
-            matriz = np.asarray(frame)
-            matriz[4][0] = 0
-            if np.amax(matriz) > maximo:
-                maximo = np.amax(matriz)
-                num_amostra_max = i
-                num_frame_max = j
-            if np.amin(matriz) < minimo:
-                minimo = np.amin(matriz)
-                num_amostra_min = i
-                num_frame_min = j
-    print(f'Amostra do máximo: {num_amostra_max}')
-    print(f'Amostra do mínimo: {num_amostra_min}')
-    print(f'Frame do máximo: {num_frame_max}')
-    print(f'Frame do mínimo: {num_frame_min}')
-    return minimo, maximo
-
 #Função que cria um diretório para salvar as imagens caso não exista
 def criarDiretorio(nomeDiretorio):
     if not os.path.isdir(f'./{nomeDiretorio}'):
@@ -121,36 +73,30 @@ def takeFirstAndLast(element):
     return element_splited
     
 #Salvar em disco as imagens convertidas para escala de cinza de acordo com os parâmetros previamente definidos
-def salvarImagensEmDisco(qtdAmostras, qtdImagens, dados, diretorio, minimo, maximo, nomeDados, grupoDados):
+def salvarImagens(qtdAmostras, qtdImagens, dados, diretorio, nomeDados, grupoDados):
     for i in range(qtdAmostras):
         for j in range(qtdImagens):
             frame = obterFrames(dados['dados_prontos'][i][0],j)
             matriz = np.asarray(frame)
             matriz[4][0] = 0
             imagem = pil.fromarray(matriz, mode='L')
-            #imagem = scipy.misc.toimage(matriz, cmin=minimo, cmax=maximo)
-            #plt.gray()
-            #plt.imshow(dadoVoluntarioControle)
-            if nomeDados == 'bf':
-                #plt.imsave(f'./{diretorio}/{i}_imagem_controle_biceps_{j}.jpg',dadoVoluntarioControle)
+            
+            if nomeDados == 'biceps':
                 if grupoDados == 'controle':
                     imagem.save(f'./{diretorio}/{i}_controle_biceps_{j}.jpg')
                 else:
                     imagem.save(f'./{diretorio}/{i}_diabetico_biceps_{j}.jpg')
-            elif nomeDados == 'gm':
-                #plt.imsave(f'./{diretorio}/{i}_imagem_controle_gastrocnemio_{j}.jpg',dadoVoluntarioControle)
+            elif nomeDados == 'gastrocnemio':
                 if grupoDados == 'controle':
                     imagem.save(f'./{diretorio}/{i}_controle_gastrocnemio_{j}.jpg')
                 else:
                     imagem.save(f'./{diretorio}/{i}_diabetico_gastrocnemio_{j}.jpg')
-            elif nomeDados == 'ta':
-                #plt.imsave(f'./{diretorio}/{i}_imagem_controle_tibial_{j}.jpg',dadoVoluntarioControle)
+            elif nomeDados == 'tibial':
                 if grupoDados == 'controle':
                     imagem.save(f'./{diretorio}/{i}_controle_tibial_{j}.jpg')
                 else:
                     imagem.save(f'./{diretorio}/{i}_diabetico_tibial_{j}.jpg')
             else:
-                #plt.imsave(f'./{diretorio}/{i}_imagem_controle_vasto_{j}.jpg',dadoVoluntarioControle)
                 if grupoDados == 'controle':
                     imagem.save(f'./{diretorio}/{i}_controle_vasto_{j}.jpg')
                 else:
@@ -169,14 +115,6 @@ def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation,
     qtdTest = 2*test*qtdImagens
     
     return qtdTrain, qtdValidation, qtdTest
-
-#Função para converter uma imagem colorida em escala de cinza
-def rgb2gray(rgb):
-    
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-    
-    return gray
     
 #Função que prepara os dados, criando diretórios caso não existam e copiando arquivos nos devidos lugares
 def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
@@ -243,6 +181,22 @@ def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation
 #------------------------------------------------------------------------------
 #Métodos para tratamento dos dados processados utilizando lógica fuzzy
 #------------------------------------------------------------------------------
+
+#Função que carrega os arquivos contidos em um diretório e retorna um
+#dicionário com os dados e um dicionário com os metadados referentes ao arquivo
+def carregarDadosFuzzyDeDiretorio(caminho):
+    dados = {}
+    metaDados = []
+    
+    arquivos = os.listdir(caminho)
+    for i in range(len(arquivos)):
+        dados[i] = sp.loadmat(f'{caminho}{arquivos[i]}')
+        musculo_grupo = re.search('fuzzy_(.*?)_(.*?)_(.*?)_(.*?).mat',arquivos[i])
+        metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
+                      musculo_grupo.group(3),musculo_grupo.group(4)))
+    
+    return dados, metaDados
+
 #Rearranjar os dados para o formato de matriz
 def organizarDadosFuzzy(dados, indice):
     vetorFuzzy = dados['FuzEn'][indice][0][0]
@@ -274,64 +228,3 @@ def salvarImagensFuzzy(qtdAmostras, dados, diretorio, nomeDados, grupoDados):
                 imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto_1.jpg')
             else:
                 imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto_1.jpg')
-                
-def prepararDadosFuzzy(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
-    itens_controle_dir = sorted(os.listdir(controle_dir),key=takeFirstAndLast)
-    itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=takeFirstAndLast)
-    
-    criarDiretorio(base_dir)
-    
-    #Criar diretórios principais de treinamento, validação e teste
-    train_dir = os.path.join(base_dir,'train')
-    criarDiretorio(train_dir)
-    validation_dir = os.path.join(base_dir,'validation')
-    criarDiretorio(validation_dir)
-    test_dir = os.path.join(base_dir,'test')
-    criarDiretorio(test_dir)
-    
-    #Criar subdiretórios de treinamento, validação e teste para controle e diabético
-    train_controle_dir = os.path.join(train_dir,'controle')
-    criarDiretorio(train_controle_dir)
-    train_diabetico_dir = os.path.join(train_dir,'diabetico')
-    criarDiretorio(train_diabetico_dir)
-    
-    validation_controle_dir = os.path.join(validation_dir,'controle')
-    criarDiretorio(validation_controle_dir)
-    validation_diabetico_dir = os.path.join(validation_dir,'diabetico')
-    criarDiretorio(validation_diabetico_dir)
-    
-    test_controle_dir = os.path.join(test_dir,'controle')
-    criarDiretorio(test_controle_dir)
-    test_diabetico_dir = os.path.join(test_dir,'diabetico')
-    criarDiretorio(test_diabetico_dir)
-    
-    #Copiar imagens dos diretórios base para subdiretórios de treinamento, validação e teste
-    for i in range(qtdTrain):
-       src = os.path.join(controle_dir, itens_controle_dir[i])
-       dst = os.path.join(train_controle_dir, itens_controle_dir[i])
-       shutil.copyfile(src, dst)
-    
-    for i in range(qtdTrain, (qtdTrain + qtdValidation)):
-       src = os.path.join(controle_dir, itens_controle_dir[i])
-       dst = os.path.join(validation_controle_dir, itens_controle_dir[i])
-       shutil.copyfile(src, dst)
-    
-    for i in range((qtdTrain + qtdValidation), (qtdTrain + qtdValidation + qtdTest)):
-       src = os.path.join(controle_dir, itens_controle_dir[i])
-       dst = os.path.join(test_controle_dir, itens_controle_dir[i])
-       shutil.copyfile(src, dst)
-    
-    for i in range(qtdTrain):
-       src = os.path.join(diabetico_dir, itens_diabetico_dir[i])
-       dst = os.path.join(train_diabetico_dir, itens_diabetico_dir[i])
-       shutil.copyfile(src, dst)
-    
-    for i in range(qtdTrain, (qtdTrain + qtdValidation)):
-       src = os.path.join(diabetico_dir, itens_diabetico_dir[i])
-       dst = os.path.join(validation_diabetico_dir, itens_diabetico_dir[i])
-       shutil.copyfile(src, dst)
-
-    for i in range((qtdTrain + qtdValidation), (qtdTrain + qtdValidation + qtdTest)):
-       src = os.path.join(diabetico_dir, itens_diabetico_dir[i])
-       dst = os.path.join(test_diabetico_dir, itens_diabetico_dir[i])
-       shutil.copyfile(src, dst)

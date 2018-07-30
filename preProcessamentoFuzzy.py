@@ -1,6 +1,3 @@
-#import scipy.io as sp
-#import os
-#import io
 import metodosPrincipais as mp
 
 #Definir um diretório base para armazenamento futuro dos dados de treinamento, validação e teste
@@ -8,15 +5,7 @@ base_dir = './FuzzyBase'
 
 #Carregar os dados dos HD-sEMG
 caminho = './Dados/'
-dados, metaDados = mp.carregarDadosDeDiretorio(caminho)
-#vasto_controle_10_1 = sp.loadmat('fuzzy_biceps_controle_10.mat')
-#vasto_diabeticos_10_1 = sp.loadmat('fuzzy_biceps_diabeticos_10.mat')
-#biceps_controle_10_1 = sp.loadmat('fuzzy_gastrocnemio_controle_10.mat')
-#biceps_diabeticos_10_1 = sp.loadmat('fuzzy_gastrocnemio_diabeticos_10.mat')
-#gastrocnemio_controle_10_1 = sp.loadmat('fuzzy_tibial_controle_10.mat')
-#gastrocnemio_diabeticos_10_1 = sp.loadmat('fuzzy_tibial_diabeticos_10.mat')
-#tibial_controle_10_1 = sp.loadmat('fuzzy_vasto_controle_10.mat')
-#tibial_diabeticos_10_1 = sp.loadmat('fuzzy_vasto_diabeticos_10.mat')
+dados, metaDados = mp.carregarDadosFuzzyDeDiretorio(caminho)
 
 #Definir a quantidade de imagens do EMG de cada pessoa e o nome do diretório a ser criado para salvar essas imagens
 qtdImagens = 1
@@ -45,14 +34,6 @@ for i in range(len(metaDados)):
     else:
         mp.salvarImagensFuzzy(qtdAmostras,dados[i],diretorio_fuzzy_diabetico,
                               metaDados[i][0],metaDados[i][1])
-#mp.salvarImagensFuzzy(qtdAmostras, vasto_controle_10_1, diretorio_fuzzy_controle, 'vl', 'controle')
-#mp.salvarImagensFuzzy(qtdAmostras, vasto_diabeticos_10_1, diretorio_fuzzy_diabetico, 'vl', 'diabetico')
-#mp.salvarImagensFuzzy(qtdAmostras, biceps_controle_10_1, diretorio_fuzzy_controle, 'bf', 'controle')
-#mp.salvarImagensFuzzy(qtdAmostras, biceps_diabeticos_10_1, diretorio_fuzzy_diabetico, 'bf', 'diabetico')
-#mp.salvarImagensFuzzy(qtdAmostras, gastrocnemio_controle_10_1, diretorio_fuzzy_controle, 'gm', 'controle')
-#mp.salvarImagensFuzzy(qtdAmostras, gastrocnemio_diabeticos_10_1, diretorio_fuzzy_diabetico, 'gm', 'diabetico')
-#mp.salvarImagensFuzzy(qtdAmostras, tibial_controle_10_1, diretorio_fuzzy_controle, 'ta', 'controle')
-#mp.salvarImagensFuzzy(qtdAmostras, tibial_diabeticos_10_1, diretorio_fuzzy_diabetico, 'ta', 'diabetico')
 
-mp.prepararDadosFuzzy(base_dir,f'./{diretorio_fuzzy_controle}',f'./{diretorio_fuzzy_diabetico}',
+mp.prepararDados(base_dir,f'./{diretorio_fuzzy_controle}',f'./{diretorio_fuzzy_diabetico}',
                  qtdTrain,qtdValidation,qtdTest)
