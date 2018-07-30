@@ -1,12 +1,30 @@
 import os, shutil
 import numpy as np
 #import scipy.misc
+import scipy.io as sp
 import PIL.Image as pil
+import re
 
 #Link interessante sobre array como imagem
 #https://stackoverflow.com/questions/902761/saving-a-numpy-array-as-an-image
 #Amostra 0 do bícpes dos diabéticos tem valores muito extremos no frame 4118
 #Amostra 1 do bíceps dos controle tem valores extremos no frame 8832
+
+#Função que carrega os arquivos contidos em um diretório e retorna um
+#dicionário com os dados e um dicionário com o nome do músculo e o grupo
+#ao qual o voluntário pertence
+def carregarDadosDeDiretorio(caminho):
+    dados = {}
+    metaDados = []
+    
+    arquivos = os.listdir(caminho)
+    for i in range(len(arquivos)):
+        dados[i] = sp.loadmat(f'{caminho}{arquivos[i]}')
+        musculo_grupo = re.search('fuzzy_(.*?)_(.*?)_(.*?)_(.*?).mat',arquivos[i])
+        metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
+                      musculo_grupo.group(3),musculo_grupo.group(4)))
+    
+    return dados, metaDados
 
 #Função que carrega as imagens de um diretório
 def carregarImagensDoDiretorio(diretorio):
@@ -235,17 +253,17 @@ def salvarImagensFuzzy(qtdAmostras, dados, diretorio, nomeDados, grupoDados):
         matriz = organizarDadosFuzzy(dados,i)
         imagem = pil.fromarray(matriz, mode='L')
         
-        if nomeDados == 'bf':
+        if nomeDados == 'biceps':
             if grupoDados == 'controle':
                 imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps.jpg')
             else:
                 imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps.jpg')
-        elif nomeDados == 'gm':
+        elif nomeDados == 'gastrocnemio':
             if grupoDados == 'controle':
                 imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio.jpg')
             else:
                 imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio.jpg')
-        elif nomeDados == 'ta':
+        elif nomeDados == 'tibial':
             if grupoDados == 'controle':
                 imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial.jpg')
             else:
