@@ -1,6 +1,6 @@
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
-#import numpy as np
+import numpy as np
 import metodosPrincipais as mp
 from sklearn.model_selection import StratifiedKFold, RepeatedStratifiedKFold
 
@@ -18,9 +18,12 @@ y_val = y_val.astype('float32')
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=1)
 #rkfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=5)
+
+vetor_indice = np.zeros(shape=(y_train.shape[0], 1))
+
 resultados = []
 
-for indice_treinamento, indice_teste in kfold.split(previsores, y_train):
+for indice_treinamento, indice_teste in kfold.split(previsores, vetor_indice):
     #print('Indices treinamento', indice_treinamento, 'Indice teste', indice_teste)
     classificador = Sequential()
     classificador.add(Conv2D(filters=64, kernel_size=(3, 3), input_shape=(5, 12, 1), activation='relu', padding='same'))
