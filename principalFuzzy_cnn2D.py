@@ -16,13 +16,14 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 model.summary()
 
-#train_datagen = ImageDataGenerator(rescale=1./255)
-train_datagen = ImageDataGenerator(rescale=1./255,
-                                         rotation_range=7,
-                                         horizontal_flip=True,
-                                         shear_range=0.2,
-                                         height_shift_range=0.07,
-                                         zoom_range=0.2)
+train_datagen = ImageDataGenerator(rescale=1./255)
+#train_datagen = ImageDataGenerator(rescale=1./255,
+#                                         rotation_range=7,
+#                                         horizontal_flip=True,
+#                                         shear_range=0.2,
+#                                         height_shift_range=0.07,
+#                                         zoom_range=0.2)
+
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory('./FuzzyBase/train', 
@@ -39,8 +40,8 @@ for data_batch, labels_batch in train_generator:
     print('label batch shape:', labels_batch.shape)
     break
 
-history = model.fit_generator(train_generator, steps_per_epoch=40, epochs=15, 
-                              validation_data=validation_generator, validation_steps=24)
+history = model.fit_generator(train_generator, steps_per_epoch=120, epochs=15, 
+                              validation_data=validation_generator, validation_steps=72)
 
 acc = history.history['acc']
 val_acc = history.history['val_acc']

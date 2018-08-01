@@ -111,15 +111,16 @@ def salvarImagens(qtdAmostras, qtdImagens, dados, diretorio, nomeDados, grupoDad
 
 #Função que define a quantidade de amostras nos grupos de treino, validação e teste
 def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation, 
-                                qtdPercentTest, qtdAmostras, qtdImagens):
+                                qtdPercentTest, qtdAmostras, qtdImagens,
+                                qtdSituacoes, qtdTentativas):
     qtdAmostras = 2*qtdAmostras
     train = round((qtdPercentTrain*qtdAmostras)/100)
     validation = round((qtdPercentValidation*qtdAmostras)/100)
     test = round((qtdPercentTest*qtdAmostras)/100)
     
-    qtdTrain = 2*train*qtdImagens
-    qtdValidation = 2*validation*qtdImagens
-    qtdTest = 2*test*qtdImagens
+    qtdTrain = 2*qtdSituacoes*qtdTentativas*train*qtdImagens
+    qtdValidation = 2*qtdSituacoes*qtdTentativas*validation*qtdImagens
+    qtdTest = 2*qtdSituacoes*qtdTentativas*test*qtdImagens
     
     return qtdTrain, qtdValidation, qtdTest
     

@@ -1,7 +1,7 @@
 import metodosPrincipais as mp
 
 #Definir um diretório base para armazenamento futuro dos dados de treinamento, validação e teste
-base_dir = './FuzzyBase'
+base_dir = './FuzzyBase/'
 
 #Carregar os dados dos HD-sEMG
 caminho = './Dados/'
@@ -19,10 +19,14 @@ qtdAmostras = 10
 qtdPercentTrain = 50
 qtdPercentValidation = 30
 qtdPercentTest = 20
+qtdSituacoes = 3
+qtdTentativas = 2
 qtdTrain, qtdValidation, qtdTest = mp.definirTreinamentoValidacao(qtdPercentTrain, 
                                                                   qtdPercentValidation, 
                                                                   qtdPercentTest, 
-                                                                  qtdAmostras, qtdImagens)
+                                                                  qtdAmostras,qtdImagens,
+                                                                  qtdSituacoes,
+                                                                  qtdTentativas)
 
 mp.criarDiretorio(diretorio_fuzzy_controle)
 mp.criarDiretorio(diretorio_fuzzy_diabetico)
