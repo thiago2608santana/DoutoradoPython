@@ -34,8 +34,8 @@ def carregarImagensDoDiretorio(diretorio):
 def obterConjuntoTreinamentoValidacao(dir_train, dir_val):
     treinamento_1 = carregarImagensDoDiretorio(f'{dir_train}/controle/')
     treinamento_2 = carregarImagensDoDiretorio(f'{dir_train}/diabetico/')
-    validacao_1 = carregarImagensDoDiretorio(f'{dir_val}/controle')
-    validacao_2 = carregarImagensDoDiretorio(f'{dir_val}/diabetico')
+    validacao_1 = carregarImagensDoDiretorio(f'{dir_val}/controle/')
+    validacao_2 = carregarImagensDoDiretorio(f'{dir_val}/diabetico/')
     
     X_train = np.concatenate((treinamento_1, treinamento_2))
     X_val = np.concatenate((validacao_1, validacao_2))
@@ -70,6 +70,13 @@ def takeFirstAndLast(element):
     element_splited = []
     element_splited.append(int(element.split('_')[0]))
     element_splited.append(int(element.split('_')[4].split('.')[0]))
+    return element_splited
+
+def ordenarImagens(element):
+    element_splited = []
+    element_splited.append(int(element.split('_')[0]))
+    element_splited.append(int(element.split('_')[4]))
+    element_splited.append(int(element.split('_')[5].split('.')[0]))
     return element_splited
     
 #Salvar em disco as imagens convertidas para escala de cinza de acordo com os parâmetros previamente definidos
@@ -118,8 +125,11 @@ def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation,
     
 #Função que prepara os dados, criando diretórios caso não existam e copiando arquivos nos devidos lugares
 def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation, qtdTest):
-    itens_controle_dir = sorted(os.listdir(controle_dir),key=takeFirstAndLast)
-    itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=takeFirstAndLast)
+    #itens_controle_dir = sorted(os.listdir(controle_dir),key=takeFirstAndLast)
+    #itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=takeFirstAndLast)
+    
+    itens_controle_dir = sorted(os.listdir(controle_dir),key=ordenarImagens)
+    itens_diabetico_dir = sorted(os.listdir(diabetico_dir),key=ordenarImagens)
     
     criarDiretorio(base_dir)
     
@@ -203,28 +213,28 @@ def organizarDadosFuzzy(dados, indice):
     matrizFuzzy = np.reshape(vetorFuzzy, (5, 12))
     return matrizFuzzy
 
-def salvarImagensFuzzy(qtdAmostras, dados, diretorio, nomeDados, grupoDados):
+def salvarImagensFuzzy(qtdAmostras, dados, metaDados, diretorio):
     for i in range(qtdAmostras):
         matriz = organizarDadosFuzzy(dados,i)
         imagem = pil.fromarray(matriz, mode='L')
         
-        if nomeDados == 'biceps':
-            if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps_1.jpg')
+        if metaDados[0] == 'biceps':
+            if metaDados[1] == 'controle':
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_biceps_{metaDados[2]}_{metaDados[3]}.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps_1.jpg')
-        elif nomeDados == 'gastrocnemio':
-            if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio_1.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_biceps_{metaDados[2]}_{metaDados[3]}.jpg')
+        elif metaDados[0] == 'gastrocnemio':
+            if metaDados[1] == 'controle':
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_gastrocnemio_{metaDados[2]}_{metaDados[3]}.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio_1.jpg')
-        elif nomeDados == 'tibial':
-            if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial_1.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_gastrocnemio_{metaDados[2]}_{metaDados[3]}.jpg')
+        elif metaDados[0] == 'tibial':
+            if metaDados[1] == 'controle':
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_tibial_{metaDados[2]}_{metaDados[3]}.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_tibial_1.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_tibial_{metaDados[2]}_{metaDados[3]}.jpg')
         else:
-            if grupoDados == 'controle':
-                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto_1.jpg')
+            if metaDados[1] == 'controle':
+                imagem.save(f'./{diretorio}/{i}_controle_fuzzy_vasto_{metaDados[2]}_{metaDados[3]}.jpg')
             else:
-                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto_1.jpg')
+                imagem.save(f'./{diretorio}/{i}_diabetico_fuzzy_vasto_{metaDados[2]}_{metaDados[3]}.jpg')

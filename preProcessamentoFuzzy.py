@@ -29,11 +29,9 @@ mp.criarDiretorio(diretorio_fuzzy_diabetico)
 
 for i in range(len(metaDados)):
     if metaDados[i][1] == 'controle':
-        mp.salvarImagensFuzzy(qtdAmostras,dados[i],diretorio_fuzzy_controle,
-                              metaDados[i][0],metaDados[i][1])
+        mp.salvarImagensFuzzy(qtdAmostras,dados[i],metaDados[i],diretorio_fuzzy_controle)
     else:
-        mp.salvarImagensFuzzy(qtdAmostras,dados[i],diretorio_fuzzy_diabetico,
-                              metaDados[i][0],metaDados[i][1])
+        mp.salvarImagensFuzzy(qtdAmostras,dados[i],metaDados[i],diretorio_fuzzy_diabetico)
 
 mp.prepararDados(base_dir,f'./{diretorio_fuzzy_controle}',f'./{diretorio_fuzzy_diabetico}',
                  qtdTrain,qtdValidation,qtdTest)
