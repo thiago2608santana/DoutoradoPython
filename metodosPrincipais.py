@@ -3,6 +3,7 @@ import numpy as np
 import scipy.io as sp
 import PIL.Image as pil
 import re
+import copy
 
 #Função que carrega os arquivos contidos em um diretório e retorna um
 #dicionário com os dados e um dicionário com os metadados referentes ao arquivo
@@ -192,6 +193,35 @@ def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation
 #------------------------------------------------------------------------------
 #Métodos para tratamento dos dados processados utilizando lógica fuzzy
 #------------------------------------------------------------------------------
+
+#Função que determina os índices de treinamento e teste para realizar a 
+#validação cruzada
+def validacaoCruzada(caminho_controle, caminho_diabeticos, k_fold, qtdAmostras,
+                     qtdTrain, qtdValidation):
+    id_controle = []
+    id_diabeticos = []
+    indices = np.array(np.arange(0, 2*qtdAmostras))
+    indices_treinamento = {i: None for i in range(k_fold)}
+    indices_validacao = {i: None for i in range(k_fold)}
+    
+    arquivos_controle = os.listdir(caminho_controle)
+    arquivos_diabeticos = os.listdir(caminho_diabeticos)
+    
+    for i in range(2*qtdAmostras):
+        id_controle.append(int(arquivos_controle[i].split('_')[0]))
+        id_diabeticos.append(int(arquivos_diabeticos[i].split('_')[0]))
+    
+    id_controle = np.asarray(id_controle)
+    id_diabeticos = np.asarray(id_diabeticos)
+    
+    for key in indices_treinamento.keys():
+        embaralhados = copy.deepcopy(indices)
+        np.random.seed(key)
+        np.random.shuffle(embaralhados)
+        indices_treinamento[key] = embaralhados[0:qtdTrain]
+        indices_validacao[key] = embaralhados[qtdTrain:qtdTrain+qtdValidation]
+    
+    return indices_treinamento, indices_validacao
 
 #Função que carrega os arquivos contidos em um diretório e retorna um
 #dicionário com os dados e um dicionário com os metadados referentes ao arquivo
