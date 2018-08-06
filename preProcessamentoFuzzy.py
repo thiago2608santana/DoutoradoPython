@@ -19,14 +19,14 @@ qtdAmostras = 10
 qtdPercentTrain = 50
 qtdPercentValidation = 30
 qtdPercentTest = 20
-qtdSituacoes = 3
-qtdTentativas = 2
+qtdCondicoes = 4
+qtdRepeticoes = 2
 qtdTrain, qtdValidation, qtdTest = mp.definirTreinamentoValidacao(qtdPercentTrain, 
                                                                   qtdPercentValidation, 
                                                                   qtdPercentTest, 
                                                                   qtdAmostras,qtdImagens,
-                                                                  qtdSituacoes,
-                                                                  qtdTentativas)
+                                                                  qtdCondicoes,
+                                                                  qtdRepeticoes)
 
 mp.criarDiretorio(diretorio_fuzzy_controle)
 mp.criarDiretorio(diretorio_fuzzy_diabetico)

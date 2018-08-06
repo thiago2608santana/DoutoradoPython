@@ -112,16 +112,16 @@ def salvarImagens(qtdAmostras, qtdImagens, dados, diretorio, nomeDados, grupoDad
 
 #Função que define a quantidade de amostras nos grupos de treino, validação e teste
 def definirTreinamentoValidacao(qtdPercentTrain, qtdPercentValidation, 
-                                qtdPercentTest, qtdAmostras, qtdImagens,
-                                qtdSituacoes, qtdTentativas):
-    qtdAmostras = 2*qtdAmostras
+                                qtdPercentTest, qtdAmostrasPorGrupo, qtdImagens,
+                                qtdCondicoes, qtdRepeticoes):
+    qtdAmostras = 2*qtdAmostrasPorGrupo
     train = round((qtdPercentTrain*qtdAmostras)/100)
     validation = round((qtdPercentValidation*qtdAmostras)/100)
     test = round((qtdPercentTest*qtdAmostras)/100)
     
-    qtdTrain = 2*qtdSituacoes*qtdTentativas*train*qtdImagens
-    qtdValidation = 2*qtdSituacoes*qtdTentativas*validation*qtdImagens
-    qtdTest = 2*qtdSituacoes*qtdTentativas*test*qtdImagens
+    qtdTrain = 2*qtdCondicoes*qtdRepeticoes*train*qtdImagens
+    qtdValidation = 2*qtdCondicoes*qtdRepeticoes*validation*qtdImagens
+    qtdTest = 2*qtdCondicoes*qtdRepeticoes*test*qtdImagens
     
     return qtdTrain, qtdValidation, qtdTest
     
@@ -196,25 +196,26 @@ def prepararDados(base_dir, controle_dir, diabetico_dir, qtdTrain, qtdValidation
 
 #Função que determina os índices de treinamento e teste para realizar a 
 #validação cruzada
-def validacaoCruzada(caminho_controle, caminho_diabeticos, k_fold, qtdAmostras,
-                     qtdTrain, qtdValidation):
+def validacaoCruzada(caminho_controle, caminho_diabeticos, k_fold, 
+                     qtdAmostrasPorGrupo, qtdTrain, qtdValidation,
+                     qtdCondicoes, qtdRepeticoes, qtdMusculos):
     id_controle = []
     id_diabeticos = []
-    indices = np.array(np.arange(0, 2*qtdAmostras))
+    indices = np.array(np.arange(0, 2*qtdAmostrasPorGrupo))
     indices_treinamento = {i: None for i in range(k_fold)}
     indices_validacao = {i: None for i in range(k_fold)}
     
     arquivos_controle = os.listdir(caminho_controle)
     arquivos_diabeticos = os.listdir(caminho_diabeticos)
     
-    for i in range(2*qtdAmostras):
+    for i in range(qtdAmostrasPorGrupo*qtdCondicoes*qtdRepeticoes*qtdMusculos):
         id_controle.append(int(arquivos_controle[i].split('_')[0]))
         id_diabeticos.append(int(arquivos_diabeticos[i].split('_')[0]))
     
     id_controle = np.asarray(id_controle)
     id_diabeticos = np.asarray(id_diabeticos)
     
-    for key in indices_treinamento.keys():
+    for key in range(k_fold):
         embaralhados = copy.deepcopy(indices)
         np.random.seed(key)
         np.random.shuffle(embaralhados)
@@ -233,7 +234,11 @@ def carregarDadosFuzzyDeDiretorio(caminho):
     for i in range(len(arquivos)):
         dados[i] = sp.loadmat(f'{caminho}{arquivos[i]}')
         musculo_grupo = re.search('fuzzy_(.*?)_(.*?)_(.*?)_(.*?).mat',arquivos[i])
-        metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
+        if musculo_grupo.group(3) == 'Max':
+            metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
+                      40,musculo_grupo.group(4)))
+        else:
+            metaDados.append((musculo_grupo.group(1),musculo_grupo.group(2),
                       musculo_grupo.group(3),musculo_grupo.group(4)))
     
     return dados, metaDados

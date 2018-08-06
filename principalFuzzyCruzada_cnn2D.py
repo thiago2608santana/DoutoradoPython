@@ -1,8 +1,8 @@
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
+#from tensorflow.python.keras.models import Sequential
+#from tensorflow.python.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
 import numpy as np
 import metodosPrincipais as mp
-from sklearn.model_selection import StratifiedKFold, RepeatedStratifiedKFold
+#from sklearn.model_selection import StratifiedKFold, RepeatedStratifiedKFold
 
 diretorio_treinamento = './FuzzyBase/train/'
 diretorio_validacao = './FuzzyBase/validation/'
@@ -15,6 +15,24 @@ previsores /= 255
 
 y_train = y_train.astype('float32')
 y_val = y_val.astype('float32')
+
+caminho_controle = './ImagensFuzzyControle/'
+caminho_diabeticos = './ImagensFuzzyDiabeticos/'
+k_fold = 10
+qtdAmostrasPorGrupo = 8
+qtdTrain = 16
+qtdValidation = 2
+qtdCondicoes = 4
+qtdRepeticoes = 2
+qtdMusculos = 4
+indices_treinamento, indices_teste = mp.validacaoCruzada(caminho_controle,
+                                                         caminho_diabeticos,
+                                                         k_fold,
+                                                         qtdAmostrasPorGrupo,
+                                                         qtdTrain,qtdValidation,
+                                                         qtdCondicoes,
+                                                         qtdRepeticoes,
+                                                         qtdMusculos)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=1)
 #rkfold = RepeatedStratifiedKFold(n_splits=10, n_repeats=5)
